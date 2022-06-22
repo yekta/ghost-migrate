@@ -148,10 +148,19 @@ module.exports = (name, html, globalUser) => {
 
     // Y: Replace image sources to reference bigger resolution versions
     $post("img").each((i, el) => {
+        const $img = $(el);
         const maxRegex = /\/max\/[0-9]+\//;
-        const oldUrl = $(el).attr("src");
+        const oldUrl = $img.attr("src");
         const maxValue = 4096;
-        $(el).attr("src", oldUrl.replace(maxRegex, `/max/${maxValue}/`));
+        $img.attr("src", oldUrl.replace(maxRegex, `/max/${maxValue}/`));
+    });
+
+    // Y: Replace "a" tag "rel" attribute values with "noopener" if "rel" has a value
+    $post("a").each((i, el) => {
+        const $a = $(el);
+        if ($a.attr("rel")) {
+            $a.attr("rel", "noopener");
+        }
     });
 
     const post = processMeta(name, $post);
